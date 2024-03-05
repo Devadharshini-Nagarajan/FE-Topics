@@ -35,7 +35,7 @@ function ServiceWorker() {
     if (!navigator.onLine) {
       navigator.serviceWorker.ready.then((registration) => {
         if (registration.sync) {
-          registration.sync.register("order").then(() => {
+          registration.sync.register("add_order").then(() => {
             console.log("Sync order registered");
           });
         }
@@ -77,6 +77,39 @@ function ServiceWorker() {
     indexedDBOpenRequest.onerror = (error) => {
       console.error("IndexedDB error:", error);
     };
+  };
+
+  const handleBgFetchClick = async () => {
+    try {
+      let assetToFetchId = `series_${Date.now()}`;
+
+      const registration = await navigator.serviceWorker.ready;
+
+      let assetsData = {
+        title: "My series",
+        urls: ["/assets/asset_01.mp4", "/assets/asset_02.jpg"],
+        downloadTotal: 4194304,
+        icons: [
+          {
+            src: `/logo192.png`,
+            size: "128x128",
+            type: "image/png",
+          },
+        ],
+      };
+
+      const bgFetchRegistration = await registration.backgroundFetch.fetch(
+        assetToFetchId,
+        assetsData.urls.map((url) => `${process.env.PUBLIC_URL}${url}`),
+        {
+          icons: assetsData.icons,
+          title: `Downloading ${assetsData.title}`,
+          downloadTotal: assetsData.downloadTotal,
+        }
+      );
+    } catch (err) {
+      console.error("Bg Fetch", err);
+    }
   };
 
   return (
@@ -140,6 +173,16 @@ function ServiceWorker() {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="mt-5">
+        <h1 className="text-3xl font-bold">Background Fetch</h1>
+        <p>Download Video and close the tab, it will still download</p>
+        <button
+          className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleBgFetchClick}
+        >
+          Store assets locally
+        </button>
       </div>
     </div>
   );

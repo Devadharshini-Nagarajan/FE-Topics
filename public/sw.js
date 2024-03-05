@@ -52,17 +52,18 @@ self.addEventListener("install", (event) => {
     addResourcesToCache([
       "/",
       "/index.html",
-      "/static/css/main.4a4daa38.css",
-      "/static/css/main.4a4daa38.css.map",
+      "/static/css/main.2b4939e1.css",
+      "/static/css/main.2b4939e1.css.map",
       "/static/js/453.340b5978.chunk.js",
       "/static/js/453.340b5978.chunk.js.map",
-      "/static/js/main.810845c5.js",
-      "/static/js/main.810845c5.js.map",
+      "/static/js/main.d6253bf4.js",
+      "/static/js/main.d6253bf4.js.map",
       "/manifest.json",
       "/favicon.ico",
       "/logo192.png",
       "/logo512.png",
       "/static/js/bundle.js",
+      "/assets",
     ])
   );
 });
@@ -123,7 +124,7 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener("sync", function (event) {
-  if (event.tag == "order") {
+  if (event.tag == "add_order") {
     event.waitUntil(getOrderData());
   }
 });
@@ -172,3 +173,40 @@ function deleteFromIndexdb(index) {
     storeObj.delete(index);
   };
 }
+
+addEventListener("backgroundfetchsuccess", (event) => {
+  console.log("[Service Worker]: Background Fetch Success", event.registration);
+  //   event.waitUntil(
+  //     (async function () {
+  //       try {
+  //         // Iterating the records to populate the cache
+  //         const cache = await caches.open(CACHE_NAME);
+  //         const records = await event.registration.matchAll();
+  //         const promises = records.map(async (record) => {
+  //           const response = await record.responseReady;
+  //           await cache.put(record.request, response);
+  //         });
+  //         await Promise.all(promises);
+
+  //         // Updating UI
+  //         await event.updateUI({
+  //           title: `${assetsData.title} is ready`,
+  //           icons: assetsData.icons,
+  //         });
+  //       } catch (err) {
+  //         await event.updateUI({
+  //           title: `${assetsData.title} failed: ${event.registration.failureReason}`,
+  //         });
+  //       }
+  //     })()
+  //   );
+});
+
+addEventListener("backgroundfetchabort", (event) => {
+  console.log("[Service Worker]: Background Fetch Abort", event.registration);
+  console.error("Aborted by the user. No data was saved.");
+});
+
+addEventListener("backgroundfetchclick", (event) => {
+  console.log("[Service Worker]: Background Fetch Click", event.registration);
+});

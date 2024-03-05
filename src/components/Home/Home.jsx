@@ -9,10 +9,17 @@ function Home() {
       {
         title: "Web Workers",
         path: "/web-worker",
+        showPath: true,
       },
       {
         title: "Service Workers / PWA",
         path: "/service-worker",
+        showPath: true,
+      },
+      {
+        title: "Project Context",
+        path: "",
+        showPath: false,
       },
     ];
     setTopics(topics);
