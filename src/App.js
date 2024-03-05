@@ -4,6 +4,7 @@ import Home from "./components/Home/Home";
 import MainLayout from "./components/MainLayout/MainLayout";
 import WebWorker from "./components/WebWorker/WebWorker";
 import ServiceWorker from "./components/ServiceWorker/ServiceWorker";
+import ProjectContext from "./ProjectContext";
 
 function App() {
   const routes = createBrowserRouter([
@@ -28,7 +29,9 @@ function App() {
   ]);
   return (
     <div className="app">
-      <RouterProvider router={routes} />
+      <ProjectContext>
+        <RouterProvider router={routes} />
+      </ProjectContext>
     </div>
   );
 }

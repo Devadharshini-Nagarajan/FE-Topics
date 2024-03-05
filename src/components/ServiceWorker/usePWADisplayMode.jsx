@@ -15,17 +15,6 @@ export const usePWADisplayMode = () => {
     } else {
       setPWAStatus("browser");
     }
-
-    window
-      .matchMedia("(display-mode: standalone)")
-      .addEventListener("change", (evt) => {
-        let displayMode = "browser";
-        setPWAStatus("browser");
-        if (evt.matches) {
-          displayMode = "standalone";
-          setPWAStatus("standalone");
-        }
-      });
   };
 
   useEffect(() => {

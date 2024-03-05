@@ -87,7 +87,6 @@ self.addEventListener("activate", function (event) {
 });
 
 self.addEventListener("fetch", (event) => {
-  console.log("Fetching event", event.request.url);
   //   event.respondWith(
   //     cacheFirst({
   //       request: event.request,

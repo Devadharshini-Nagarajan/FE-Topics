@@ -1,52 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { usePWADisplayMode } from "./usePWADisplayMode";
+import React, { useState, useContext } from "react";
+import { MainContext } from "../../ProjectContext";
 
 function ServiceWorker() {
-  const PWAStatus = usePWADisplayMode();
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isAppInstalled, setIsAppInstalled] = useState(false);
+  const [state, dispatch] = useContext(MainContext);
   const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    // TODO - later move this install prompt listen logic to main component and add deferredPrompt in redux
-    const handleBeforeInstallPrompt = (event) => {
-      event.preventDefault();
-      setDeferredPrompt(event);
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", () => {
-      console.log("PWA was installed");
-      setIsAppInstalled(true);
-    });
-
-    if (
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone
-    ) {
-      setIsAppInstalled(true);
-    }
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-    };
-  }, []);
 
   const hideInstallPromotion = () => {};
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
+    if (state.deferredPrompt) {
       hideInstallPromotion();
 
-      deferredPrompt.prompt();
+      state.deferredPrompt.prompt();
 
-      const { outcome } = await deferredPrompt.userChoice;
+      const { outcome } = await state.deferredPrompt.userChoice;
 
       console.log(`User response to the install prompt: ${outcome}`);
 
-      setDeferredPrompt(null);
+      dispatch({
+        type: "UPDATE_DEFERRED_PROMPT",
+        value: null,
+      });
     }
   };
 
@@ -104,29 +77,28 @@ function ServiceWorker() {
     indexedDBOpenRequest.onerror = (error) => {
       console.error("IndexedDB error:", error);
     };
-
-    indexedDBOpenRequest.onblocked = () => {
-      console.error("IndexedDB blocked");
-    };
   };
 
   return (
     <div className="flex flex-col">
-      Mode: {PWAStatus}
+      Mode: {state.pwaStatus}
       <div className="mt-5">
         <h1 className="text-3xl font-bold">PWA Prompt</h1>
-        {!isAppInstalled && (
+
+        {!state.isAppInstalled && (
           <>
             <p>
               On click it gives prompt to install as PWA, It will be shown only
               when is in browser
             </p>
-            <button
-              className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => handleInstallClick(deferredPrompt)}
-            >
-              Install App
-            </button>
+            {state.pwaStatus === "browser" && (
+              <button
+                className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleInstallClick}
+              >
+                Install App
+              </button>
+            )}
           </>
         )}
       </div>
