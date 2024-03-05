@@ -11,7 +11,7 @@ function Home() {
         path: "/web-worker",
       },
       {
-        title: "Service Workers",
+        title: "Service Workers / PWA",
         path: "/service-worker",
       },
     ];
