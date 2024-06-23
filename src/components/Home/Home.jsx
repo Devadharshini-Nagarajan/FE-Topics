@@ -21,6 +21,16 @@ function Home() {
         path: "",
         showPath: false,
       },
+      {
+        title: "XSS",
+        path: "/xss",
+        showPath: true,
+      },
+      {
+        title: "Accessbility",
+        path: "/accessibility",
+        showPath: true,
+      },
     ];
     setTopics(topics);
   }, []);
